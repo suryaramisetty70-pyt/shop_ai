@@ -170,5 +170,6 @@ def api_chat():
     return jsonify({"reasoning": reasoning, "deal": deal})
 
 if __name__ == '__main__':
-    print("Starting Unlimited Google Search Connected App on http://localhost:5050")
-    app.run(host='0.0.0.0', port=5050, debug=False)
+    port = int(os.environ.get('PORT', 5050))
+    print(f"Starting Unlimited Google Search Connected App on port {port}")
+    app.run(host='0.0.0.0', port=port, debug=False)
