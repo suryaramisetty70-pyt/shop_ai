@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartShop AI | Unlimited Google Connected E-Commerce Engine</title>
+    <!-- FontAwesome & Google Fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #070a12;
+            --card-glass: rgba(18, 24, 38, 0.75);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --accent-primary: #6366f1;
+            --accent-glow: rgba(99, 102, 241, 0.35);
+            --success-glow: rgba(16, 185, 129, 0.35);
+            --warning-glow: rgba(245, 158, 11, 0.35);
+            --text-heading: #f8fafc;
+            --text-body: #94a3b8;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+        
+        body {
+            background-color: var(--bg-dark);
+            background-image: 
+                radial-gradient(circle at 15% 15%, rgba(99, 102, 241, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at 85% 85%, rgba(16, 185, 129, 0.08) 0%, transparent 40%);
+            color: var(--text-heading);
+            min-height: 100vh;
+            padding: 30px 20px;
+        }
+
+        header {
+            max-width: 1280px;
+            margin: 0 auto 35px auto;
+            background: var(--card-glass);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 25px 35px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+
+        .logo-group { display: flex; align-items: center; gap: 14px; }
+        .logo-icon {
+            width: 48px; height: 48px;
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.4rem; color: white;
+            box-shadow: 0 0 20px var(--accent-glow);
+        }
+
+        .header-title h1 { font-size: 1.6rem; font-weight: 800; letter-spacing: -0.5px; }
+        .header-title p { font-size: 0.85rem; color: var(--text-body); font-weight: 500; }
+
+        .google-badge {
+            background: rgba(99, 102, 241, 0.15);
+            border: 1px solid rgba(99, 102, 241, 0.4);
+            color: #a5b4fc;
+            padding: 6px 14px; border-radius: 30px;
+            font-size: 0.8rem; font-weight: 700;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .pulse-dot {
+            width: 8px; height: 8px; background-color: #34d399; border-radius: 50%;
+            animation: pulse 1.8s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(52, 211, 153, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(52, 211, 153, 0); }
+        }
+
+        .app-container { max-width: 1280px; margin: 0 auto; }
+
+        .nav-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+
+        .nav-item {
+            background: var(--card-glass);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+            padding: 14px 18px;
+            color: var(--text-body);
+            font-weight: 600;
+            font-size: 0.88rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-item i { font-size: 1.1rem; color: #818cf8; transition: transform 0.3s; }
+        .nav-item:hover { border-color: rgba(99, 102, 241, 0.4); color: white; transform: translateY(-2px); }
+
+        .nav-item.active {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.25), rgba(168, 85, 247, 0.15));
+            border-color: var(--accent-primary);
+            color: white;
+            box-shadow: 0 10px 25px var(--accent-glow);
+        }
+
+        .module-section {
+            display: none;
+            background: var(--card-glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            padding: 35px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .module-section.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-header { margin-bottom: 25px; }
+        .section-header h2 { font-size: 1.5rem; font-weight: 700; margin-bottom: 6px; }
+        .section-header p { font-size: 0.9rem; color: var(--text-body); }
+
+        .controls-row { display: flex; gap: 15px; margin-bottom: 25px; flex-wrap: wrap; }
+        
+        .custom-input, .custom-select {
+            background: rgba(10, 15, 26, 0.8);
+            border: 1px solid var(--card-border);
+            color: white;
+            padding: 12px 18px;
+            border-radius: 12px;
+            font-size: 0.92rem;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .custom-input { flex: 1; min-width: 250px; }
+        .custom-input:focus, .custom-select:focus { border-color: var(--accent-primary); box-shadow: 0 0 15px var(--accent-glow); }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #6366f1, #4f46e5);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.92rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 8px 20px var(--accent-glow);
+            display: flex; align-items: center; gap: 8px;
+        }
+
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 25px var(--accent-glow); }
+
+        .product-bento-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 22px;
+            margin-top: 20px;
+        }
+
+        .product-card-glass {
+            background: rgba(10, 15, 26, 0.6);
+            border: 1px solid var(--card-border);
+            border-radius: 18px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-card-glass:hover {
+            transform: translateY(-5px);
+            border-color: rgba(99, 102, 241, 0.4);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.5);
+        }
+
+        .product-img {
+            width: 100%; height: 180px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 15px;
+        }
+
+        .deal-banner {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.3));
+            border: 1px solid rgba(16, 185, 129, 0.5);
+            border-radius: 10px;
+            padding: 10px 14px;
+            margin: 12px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .deal-price { font-size: 1.2rem; font-weight: 800; color: #34d399; }
+        .deal-savings { font-size: 0.78rem; color: #a7f3d0; font-weight: 600; }
+
+        .score-pill {
+            background: rgba(99, 102, 241, 0.2);
+            border: 1px solid var(--accent-primary);
+            color: #a5b4fc;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            font-weight: 700;
+        }
+
+        .live-tag {
+            background: rgba(245, 158, 11, 0.2);
+            border: 1px solid rgba(245, 158, 11, 0.5);
+            color: #fbbf24;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            display: inline-block;
+        }
+
+        .comp-table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+        .comp-table th, .comp-table td { padding: 10px; text-align: left; font-size: 0.85rem; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .comp-table th { color: var(--text-body); font-weight: 600; }
+
+        .progress-bar-bg { width: 100%; height: 8px; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; margin-top: 6px; }
+        .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #6366f1, #a855f7); border-radius: 10px; }
+
+        .pros-list li { color: #34d399; list-style: none; margin-bottom: 8px; font-size: 0.88rem; display: flex; align-items: center; gap: 8px; }
+        .cons-list li { color: #f87171; list-style: none; margin-bottom: 8px; font-size: 0.88rem; display: flex; align-items: center; gap: 8px; }
+
+        .chat-response-card {
+            background: rgba(10, 15, 26, 0.9);
+            border: 1px solid var(--accent-primary);
+            border-radius: 14px;
+            padding: 20px;
+            margin-top: 20px;
+            white-space: pre-wrap;
+            font-family: inherit;
+            line-height: 1.7;
+            box-shadow: 0 0 25px var(--accent-glow);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-group">
+            <div class="logo-icon"><i class="fa-solid fa-cart-shopping"></i></div>
+            <div class="header-title">
+                <h1>SmartShop AI Engine</h1>
+                <p>Commercial Unlimited E-Commerce Platform | Connected to Live Google Search Engine</p>
+            </div>
+        </div>
+        <div class="google-badge">
+            <div class="pulse-dot"></div>
+            <span><i class="fa-brands fa-google"></i> GOOGLE LIVE SEARCH CONNECTED</span>
+        </div>
+    </header>
+
+    <div class="app-container">
+        <div class="nav-grid">
+            <div class="nav-item active" onclick="switchModule(0)"><i class="fa-solid fa-magnifying-glass-dollar"></i> Price Compare</div>
+            <div class="nav-item" onclick="switchModule(1)"><i class="fa-solid fa-brain"></i> AI Recommender</div>
+            <div class="nav-item" onclick="switchModule(2)"><i class="fa-solid fa-chart-line"></i> Price Drop AI</div>
+            <div class="nav-item" onclick="switchModule(3)"><i class="fa-solid fa-comments"></i> NLP Sentiment</div>
+            <div class="nav-item" onclick="switchModule(4)"><i class="fa-solid fa-camera"></i> Visual Search</div>
+            <div class="nav-item" onclick="switchModule(5)"><i class="fa-solid fa-robot"></i> RAG AI Chatbot</div>
+            <div class="nav-item" onclick="switchModule(6)"><i class="fa-solid fa-diagram-project"></i> Architecture</div>
+        </div>
+
+        <!-- MODULE 1: PRICE COMPARISON -->
+        <div class="module-section active" id="module-0">
+            <div class="section-header">
+                <h2>🔍 Unlimited Google Price Comparison & Deal Intelligence</h2>
+                <p>Type ANY product in the world to fetch live Google Shopping prices across Amazon, Flipkart, and Croma.</p>
+            </div>
+            <div class="controls-row">
+                <input type="text" class="custom-input" id="search-q" placeholder="Google Search ANY Product (e.g. Nike Jordan, Sony TV, Rolex, iPhone 16)..." onkeypress="if(event.key==='Enter') loadPriceComparison()">
+                <select class="custom-select" id="search-cat" onchange="loadPriceComparison()">
+                    <option value="All">All Categories</option>
+                    <option value="Smartphones">Smartphones</option>
+                    <option value="Laptops">Laptops</option>
+                    <option value="Audio">Audio</option>
+                    <option value="Smartwatches">Smartwatches</option>
+                    <option value="Accessories">Accessories</option>
+                </select>
+                <button class="btn-primary" onclick="loadPriceComparison()"><i class="fa-brands fa-google"></i> Google Live Search</button>
+            </div>
+            <div id="price-comparison-grid"></div>
+        </div>
+
+        <!-- MODULE 2: AI RECOMMENDER -->
+        <div class="module-section" id="module-1">
+            <div class="section-header">
+                <h2>🧠 PyTorch Deep Learning Recommender (Google Live Connected)</h2>
+                <p>Search Google Live for any product or pick a user profile to generate AI match scores.</p>
+            </div>
+            <div class="controls-row">
+                <input type="text" class="custom-input" id="rec-search-q" placeholder="Google Search Product for Recommendations (e.g. Gaming Headphones)..." onkeypress="if(event.key==='Enter') loadRecommendations()">
+                <select class="custom-select" id="user-profile-select" onchange="loadRecommendations()">
+                    <option value="1">Logged-in User #1 Profile</option>
+                    <option value="2">Logged-in User #2 Profile</option>
+                    <option value="3">Logged-in User #3 Profile</option>
+                    <option value="5">Logged-in User #5 Profile</option>
+                </select>
+                <button class="btn-primary" onclick="loadRecommendations()"><i class="fa-brands fa-google"></i> Search Recommendations</button>
+            </div>
+            <div class="product-bento-grid" id="recs-grid"></div>
+        </div>
+
+        <!-- MODULE 3: PRICE DROP AI -->
+        <div class="module-section" id="module-2">
+            <div class="section-header">
+                <h2>📈 AI Price Drop Predictor & Trend Forecasting (Google Live)</h2>
+                <p>Type ANY product name to project Google Live 30-day historical price trends and Buy Signals.</p>
+            </div>
+            <div class="controls-row">
+                <input type="text" class="custom-input" id="forecast-search-q" placeholder="Google Search Product to Forecast (e.g. Sony Camera)..." onkeypress="if(event.key==='Enter') loadForecast()">
+                <select class="custom-select" id="forecast-prod-select" onchange="loadForecast()">
+                    <!-- Dynamically Populated -->
+                </select>
+                <button class="btn-primary" onclick="loadForecast()"><i class="fa-brands fa-google"></i> Forecast Price Drop</button>
+            </div>
+            <div id="forecast-container"></div>
+        </div>
+
+        <!-- MODULE 4: NLP SENTIMENT -->
+        <div class="module-section" id="module-3">
+            <div class="section-header">
+                <h2>💬 NLP Review Sentiment & Pros/Cons Summarizer (Google Live)</h2>
+                <p>Search ANY Google product to extract structured Pros vs Cons AI summaries.</p>
+            </div>
+            <div class="controls-row">
+                <input type="text" class="custom-input" id="sentiment-search-q" placeholder="Google Search Product for Pros/Cons (e.g. Rolex Watch)..." onkeypress="if(event.key==='Enter') loadSentiment()">
+                <select class="custom-select" id="sentiment-prod-select" onchange="loadSentiment()">
+                    <!-- Dynamically Populated -->
+                </select>
+                <button class="btn-primary" onclick="loadSentiment()"><i class="fa-brands fa-google"></i> Analyze Reviews</button>
+            </div>
+            <div id="sentiment-container"></div>
+        </div>
+
+        <!-- MODULE 5: VISUAL SEARCH -->
+        <div class="module-section" id="module-4">
+            <div class="section-header">
+                <h2>📸 Computer Vision Visual Product Search (Google Live)</h2>
+                <p>PyTorch visual feature vector extraction comparing cosine similarity across Google product imagery.</p>
+            </div>
+            <div class="controls-row">
+                <input type="text" class="custom-input" id="visual-search-q" placeholder="Google Search Visual Items (e.g. Nike Shoes)..." onkeypress="if(event.key==='Enter') loadVisualSearch()">
+                <select class="custom-select" id="visual-cat-select" onchange="loadVisualSearch()">
+                    <option value="Smartphones">Smartphones</option>
+                    <option value="Laptops">Laptops</option>
+                    <option value="Audio">Audio</option>
+                    <option value="Smartwatches">Smartwatches</option>
+                    <option value="Accessories">Accessories</option>
+                </select>
+                <button class="btn-primary" onclick="loadVisualSearch()"><i class="fa-brands fa-google"></i> Match Photo Features</button>
+            </div>
+            <div class="product-bento-grid" id="visual-grid"></div>
+        </div>
+
+        <!-- MODULE 6: RAG CHATBOT -->
+        <div class="module-section" id="module-5">
+            <div class="section-header">
+                <h2>🤖 Agentic RAG Conversational AI Assistant (Google Connected)</h2>
+                <p>Type ANY natural language query to let the AI agent query Google Search Live and build a deal plan.</p>
+            </div>
+            <div class="controls-row">
+                <input type="text" class="custom-input" id="chat-input" placeholder="e.g. Find me a gaming laptop under 120000..." value="Find me Nike Air Jordan shoes under 25000" onkeypress="if(event.key==='Enter') sendChatPrompt()">
+                <button class="btn-primary" onclick="sendChatPrompt()"><i class="fa-solid fa-paper-plane"></i> Ask AI Assistant</button>
+            </div>
+            <div id="chat-output" style="display:none;"></div>
+        </div>
+
+        <!-- MODULE 7: ARCHITECTURE -->
+        <div class="module-section" id="module-6">
+            <div class="section-header">
+                <h2>📊 7-Module Production Architecture Summary</h2>
+                <p>Complete system breakdown for project evaluation and presentation.</p>
+            </div>
+            <div style="background: rgba(10,15,26,0.6); padding: 25px; border-radius: 16px; border: 1px solid var(--card-border); line-height: 1.8;">
+                <p><b>Module 1: Multi-Platform Price Aggregator</b> — Connected to Google Live Search across Amazon, Flipkart, Croma.</p>
+                <p><b>Module 2: PyTorch Deep Learning Recommender</b> — Neural Collaborative Filtering (NCF) mapping Google Live products into embedding spaces.</p>
+                <p><b>Module 3: Price Drop Predictor</b> — 30-day time-series regression model projecting price changes for Google Live items.</p>
+                <p><b>Module 4: NLP Sentiment Summarizer</b> — Key phrase extraction categorizing Google customer reviews into Pros & Cons.</p>
+                <p><b>Module 5: Computer Vision Visual Search</b> — Cosine vector feature similarity image matching for Google products.</p>
+                <p><b>Module 6: Agentic RAG Conversational AI Assistant</b> — Intent parsing & reasoning engine connected directly to Google Search.</p>
+                <p><b>Module 7: Bargain Deal Score Engine</b> — Multi-factor algorithm computing a 1 to 100 deal score for live market deals.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let allProductsCatalog = [];
+
+        async function initProductDropdowns() {
+            try {
+                const res = await fetch('/api/search?q=&category=All');
+                allProductsCatalog = await res.json();
+                
+                const forecastSel = document.getElementById('forecast-prod-select');
+                const sentimentSel = document.getElementById('sentiment-prod-select');
+                
+                let opts = '';
+                allProductsCatalog.forEach(p => {
+                    if (p.product_id !== 9999) {
+                        opts += `<option value="${p.product_id}">${p.title} (${p.category})</option>`;
+                    }
+                });
+
+                if (forecastSel) forecastSel.innerHTML = opts;
+                if (sentimentSel) sentimentSel.innerHTML = opts;
+            } catch (e) {
+                console.error("Error populating dropdowns:", e);
+            }
+        }
+
+        function switchModule(idx) {
+            document.querySelectorAll('.nav-item').forEach((item, i) => item.classList.toggle('active', i === idx));
+            document.querySelectorAll('.module-section').forEach((sec, i) => sec.classList.toggle('active', i === idx));
+
+            if (idx === 0) loadPriceComparison();
+            if (idx === 1) loadRecommendations();
+            if (idx === 2) loadForecast();
+            if (idx === 3) loadSentiment();
+            if (idx === 4) loadVisualSearch();
+        }
+
+        async function loadPriceComparison() {
+            const grid = document.getElementById('price-comparison-grid');
+            grid.innerHTML = '<p style="color:var(--accent-primary);"><i class="fa-brands fa-google fa-spin"></i> Connecting to Google Live Search & Fetching Store Deals...</p>';
+            
+            const q = document.getElementById('search-q')?.value || '';
+            const cat = document.getElementById('search-cat')?.value || 'All';
+            
+            try {
+                const res = await fetch(`/api/search?q=${encodeURIComponent(q)}&category=${encodeURIComponent(cat)}`);
+                const data = await res.json();
+
+                let html = '';
+                data.forEach(item => {
+                    const isLive = item.product_id === 9999;
+                    html += `
+                    <div class="product-card-glass" style="margin-bottom:20px;">
+                        <div style="display:flex; gap:20px; flex-wrap:wrap;">
+                            <img src="${item.image_url}" style="width:160px; height:130px; object-fit:cover; border-radius:12px;">
+                            <div style="flex:1;">
+                                ${isLive ? '<div class="live-tag"><i class="fa-brands fa-google"></i> Google Live Search Result</div>' : ''}
+                                <h3 style="font-size:1.2rem;">${item.title}</h3>
+                                <div style="color:var(--text-body); font-size:0.85rem; margin-bottom:8px;">Brand: ${item.brand} | Category: ${item.category} | Base: ₹${item.base_price.toLocaleString()}</div>
+                                
+                                <div class="deal-banner">
+                                    <div>
+                                        <div class="deal-price">₹${item.best_deal.price.toLocaleString()}</div>
+                                        <div class="deal-savings">🔥 Best Deal on ${item.best_deal.platform} (Save ₹${item.best_deal.savings.toLocaleString()})</div>
+                                    </div>
+                                    <div class="score-pill">Deal Score: ${item.best_deal.deal_score}/100</div>
+                                </div>
+
+                                <table class="comp-table">
+                                    <thead><tr><th>Platform</th><th>Price</th><th>Rating ⭐</th><th>Reviews</th><th>Action</th></tr></thead>
+                                    <tbody>
+                                        ${item.prices.map(p => `<tr>
+                                            <td><b>${p.platform}</b></td>
+                                            <td style="color:#34d399; font-weight:bold;">₹${p.price.toLocaleString()}</td>
+                                            <td>${p.rating} ⭐</td>
+                                            <td>${p.review_count}</td>
+                                            <td><a href="${p.buy_link || '#'}" target="_blank" style="color:#818cf8; text-decoration:none; font-weight:bold;"><i class="fa-solid fa-arrow-up-right-from-square"></i> Visit Store</a></td>
+                                        </tr>`).join('')}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>`;
+                });
+                grid.innerHTML = html || '<p>No products found matching query.</p>';
+            } catch(err) {
+                grid.innerHTML = '<p style="color:#f87171;">Failed to fetch results. Please try again.</p>';
+            }
+        }
+
+        async function loadRecommendations() {
+            const grid = document.getElementById('recs-grid');
+            grid.innerHTML = '<p style="color:var(--accent-primary);"><i class="fa-brands fa-google fa-spin"></i> Querying Google Live & Computing PyTorch NCF Embeddings...</p>';
+
+            const q = document.getElementById('rec-search-q')?.value || '';
+            const uid = document.getElementById('user-profile-select')?.value || 1;
+            
+            try {
+                const res = await fetch(`/api/recommendations?q=${encodeURIComponent(q)}&user_id=${uid}`);
+                const data = await res.json();
+
+                let html = '';
+                data.forEach(item => {
+                    const pct = Math.round((item.match_score / 5.0) * 100);
+                    html += `
+                    <div class="product-card-glass">
+                        <img src="${item.image_url}" class="product-img">
+                        <h3>${item.title}</h3>
+                        <div style="font-size:0.85rem; color:var(--text-body); margin:4px 0;">Category: ${item.category}</div>
+                        <div style="margin:10px 0;">
+                            <div style="display:flex; justify-content:space-between; font-size:0.8rem; font-weight:700; color:#a5b4fc;">
+                                <span>Match Score: ${item.match_score}/5.0</span>
+                                <span>${pct}%</span>
+                            </div>
+                            <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:${pct}%;"></div></div>
+                        </div>
+                        <div style="font-size:1.1rem; font-weight:800; color:#34d399; margin-top:8px;">₹${item.base_price.toLocaleString()}</div>
+                    </div>`;
+                });
+                grid.innerHTML = html;
+            } catch(err) {
+                grid.innerHTML = '<p style="color:#f87171;">Failed to fetch recommendations.</p>';
+            }
+        }
+
+        async function loadForecast() {
+            const q = document.getElementById('forecast-search-q')?.value || '';
+            const pid = document.getElementById('forecast-prod-select')?.value || 101;
+            
+            try {
+                const res = await fetch(`/api/forecast?q=${encodeURIComponent(q)}&product_id=${pid}`);
+                const data = await res.json();
+
+                const isBuy = data.signal === 'BUY NOW';
+                document.getElementById('forecast-container').innerHTML = `
+                    <div class="product-card-glass">
+                        <div class="badge ${isBuy ? 'badge-success' : 'badge-warning'}" style="font-size:1rem; padding:8px 16px;">AI SIGNAL: ${data.signal}</div>
+                        <h3 style="margin-top:12px;">${data.reason}</h3>
+                        <p style="margin-top:8px; color:var(--text-body);">Projected 7-Day Price: <b style="color:white;">₹${data.predicted_price.toLocaleString()}</b></p>
+                    </div>`;
+            } catch(err) {
+                document.getElementById('forecast-container').innerHTML = '<p style="color:#f87171;">Failed to fetch price forecast.</p>';
+            }
+        }
+
+        async function loadSentiment() {
+            const q = document.getElementById('sentiment-search-q')?.value || '';
+            const pid = document.getElementById('sentiment-prod-select')?.value || 101;
+            
+            try {
+                const res = await fetch(`/api/sentiment?q=${encodeURIComponent(q)}&product_id=${pid}`);
+                const data = await res.json();
+
+                document.getElementById('sentiment-container').innerHTML = `
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
+                        <div class="product-card-glass" style="border-color:rgba(16,185,129,0.3);">
+                            <h3 style="color:#34d399; margin-bottom:12px;"><i class="fa-solid fa-circle-check"></i> 👍 PROS (AI Extracted)</h3>
+                            <ul class="pros-list">${data.pros.map(p => `<li><i class="fa-solid fa-check"></i> ${p}</li>`).join('')}</ul>
+                        </div>
+                        <div class="product-card-glass" style="border-color:rgba(239,68,68,0.3);">
+                            <h3 style="color:#f87171; margin-bottom:12px;"><i class="fa-solid fa-circle-xmark"></i> 👎 CONS (AI Extracted)</h3>
+                            <ul class="cons-list">${data.cons.map(c => `<li><i class="fa-solid fa-xmark"></i> ${c}</li>`).join('')}</ul>
+                        </div>
+                    </div>`;
+            } catch(err) {
+                document.getElementById('sentiment-container').innerHTML = '<p style="color:#f87171;">Failed to analyze sentiment.</p>';
+            }
+        }
+
+        async function loadVisualSearch() {
+            const grid = document.getElementById('visual-grid');
+            grid.innerHTML = '<p style="color:var(--accent-primary);"><i class="fa-brands fa-google fa-spin"></i> Matching PyTorch Vector Features for Google Product Imagery...</p>';
+
+            const q = document.getElementById('visual-search-q')?.value || '';
+            const cat = document.getElementById('visual-cat-select')?.value || 'Smartphones';
+            
+            try {
+                const res = await fetch(`/api/visual_search?q=${encodeURIComponent(q)}&category=${cat}`);
+                const data = await res.json();
+
+                let html = '';
+                data.forEach(item => {
+                    html += `
+                    <div class="product-card-glass">
+                        <img src="${item.image_url}" class="product-img">
+                        <h3>${item.title}</h3>
+                        <div class="score-pill" style="margin:8px 0; display:inline-block;">Visual Similarity: ${item.visual_similarity}%</div>
+                        <div style="font-size:1.1rem; font-weight:800; color:#34d399;">₹${item.base_price.toLocaleString()}</div>
+                    </div>`;
+                });
+                grid.innerHTML = html;
+            } catch(err) {
+                grid.innerHTML = '<p style="color:#f87171;">Failed to load visual search results.</p>';
+            }
+        }
+
+        async function sendChatPrompt() {
+            const prompt = document.getElementById('chat-input')?.value || '';
+            try {
+                const res = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt: prompt })
+                });
+                const data = await res.json();
+                const out = document.getElementById('chat-output');
+                out.style.display = 'block';
+                out.className = 'chat-response-card';
+                out.innerText = data.reasoning;
+            } catch(err) {
+                console.error("Chat error:", err);
+            }
+        }
+
+        // Initialize Product Dropdowns dynamically and load default view
+        initProductDropdowns().then(() => {
+            loadPriceComparison();
+            loadForecast();
+            loadSentiment();
+        });
+    </script>
+</body>
+</html>
