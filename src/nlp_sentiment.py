@@ -82,6 +82,14 @@ class NLPSentimentAnalyzer:
             "Accessories & Storage": (
                 ["Blazing fast NVMe transfer speeds exceeding 1,000MB/s across large file transfers", "Compact, lightweight aluminum enclosure with IP55 water and dust resistance", "Universal plug-and-play compatibility across Windows, macOS, Android, and iPadOS"],
                 ["Included USB-C cable could be slightly longer for desktop tower setups", "Enclosure warms slightly during continuous multi-gigabyte sequential writes"]
+            ),
+            "Smart Home & IoT": (
+                ["Seamless voice assistant response with dual-band Wi-Fi reliability", "Effortless automation routines and intuitive smartphone app integration", "Energy efficient operation with intelligent scheduling"],
+                ["Requires strong home Wi-Fi coverage across all rooms", "Initial smart ecosystem pairing may require 2.4GHz network band"]
+            ),
+            "Smart Eyewear & Wearables": (
+                ["Ultra-lightweight ergonomic frame comfortable for all-day continuous wear", "High-fidelity micro open-ear audio with minimal ambient sound leakage", "Precision biometric sensor suite tracking sleep, readiness, and heart rate variability"],
+                ["Battery capacity requires overnight charging for continuous heavy daily use", "Sizing kit recommended prior to purchase to ensure perfect biometric sensor contact"]
             )
         }
 
