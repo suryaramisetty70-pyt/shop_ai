@@ -1,11 +1,18 @@
 import os
+import sys
+import re
 import pandas as pd
-from src.live_scraper import LiveMarketScraper
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+try:
+    from src.google_search import GoogleShoppingSearch
+except ImportError:
+    from google_search import GoogleShoppingSearch
 
 class PriceComparator:
     def __init__(self, data_dir):
         self.data_dir = data_dir
-        self.live_scraper = LiveMarketScraper(data_dir)
+        self.google_searcher = GoogleShoppingSearch()
         self.reload_data()
 
     def reload_data(self):
@@ -18,14 +25,35 @@ class PriceComparator:
             return self.products_df.copy()
 
         q_clean = query.strip().lower()
+        
+        # Check if there is a budget constraint (e.g. "under 50000", "below 70000")
+        budget = None
+        budget_match = re.search(r'\b(?:under|below|less than|upto|budget)\s*(\d{4,6})\b', q_clean)
+        if budget_match:
+            budget = int(budget_match.group(1))
+            q_clean = re.sub(r'\b(?:under|below|less than|upto|budget)\s*\d{4,6}\b', '', q_clean).strip()
+
         tokens = [t for t in q_clean.split() if len(t) > 1]
 
         synonyms = {
             "phone": ["smartphones", "iphone", "galaxy", "pixel", "oneplus", "mobile"],
-            "laptop": ["laptops", "macbook", "xps", "rog", "spectre", "dell", "hp", "asus"],
-            "headphone": ["audio", "sony", "airpods", "bose", "earbuds", "speaker", "jbl"],
-            "watch": ["smartwatches", "apple watch", "galaxy watch", "garmin"],
-            "mouse": ["accessories", "logitech", "power bank", "ssd", "anker", "samsung"]
+            "mobile": ["smartphones", "iphone", "galaxy", "pixel", "oneplus"],
+            "laptop": ["laptops", "macbook", "xps", "rog", "spectre", "dell", "hp", "lenovo", "asus", "acer"],
+            "macbook": ["apple", "macbook", "laptops"],
+            "headphone": ["audio", "sony", "airpods", "bose", "earbuds", "speaker", "jbl", "sennheiser"],
+            "earphone": ["audio", "earbuds", "airpods", "boat"],
+            "earbuds": ["audio", "earbuds", "airpods", "boat", "sony"],
+            "watch": ["smartwatches", "apple watch", "galaxy watch", "garmin", "fitbit"],
+            "smartwatch": ["smartwatches", "apple watch", "galaxy watch", "garmin"],
+            "tv": ["smart tvs & home", "television", "sony", "samsung", "lg", "bravia", "oled"],
+            "camera": ["cameras & drones", "sony", "canon", "nikon", "fujifilm", "gopro", "dji"],
+            "drone": ["cameras & drones", "dji", "mini 4 pro"],
+            "monitor": ["monitors & displays", "lg", "samsung", "dell", "benq", "asus"],
+            "tablet": ["tablets & e-readers", "ipad", "galaxy tab", "kindle"],
+            "ipad": ["apple", "ipad", "tablets & e-readers"],
+            "mouse": ["accessories & storage", "logitech", "mouse"],
+            "keyboard": ["accessories & storage", "keychron", "logitech", "keyboard"],
+            "ssd": ["accessories & storage", "sandisk", "samsung", "wd", "crucial"]
         }
 
         expanded_tokens = set(tokens)
@@ -34,16 +62,24 @@ class PriceComparator:
                 expanded_tokens.update(synonyms[t])
 
         scores = []
-        for idx, row in self.products_df.iterrows():
+        for _, row in self.products_df.iterrows():
             text = f"{row['title']} {row['brand']} {row['category']}".lower()
             match_count = sum(1 for t in expanded_tokens if t in text)
+            
+            # If budget constraint, prioritize items within budget
+            if budget is not None:
+                if row['base_price'] <= budget:
+                    match_count += 3
+                else:
+                    match_count -= 2
+
             scores.append(match_count)
 
         self.products_df['search_score'] = scores
         matched_df = self.products_df[self.products_df['search_score'] > 0].sort_values(by='search_score', ascending=False)
 
         if matched_df.empty:
-            return self.products_df.copy()
+            return pd.DataFrame(columns=self.products_df.columns)
 
         return matched_df.drop(columns=['search_score'])
 
@@ -68,24 +104,18 @@ class PriceComparator:
         best_price = best_deal['price']
         
         savings = max_price - best_price
-        best_deal['savings'] = savings
+        best_deal['savings'] = int(savings)
 
         discount_pct = max(0, (base_price - best_price) / base_price * 100)
         rating_score = best_deal['rating'] * 10
-        deal_score = min(99, int(50 + rating_score * 0.6 + discount_pct * 3))
+        deal_score = min(99, int(52 + rating_score * 0.5 + discount_pct * 2.8))
         best_deal['deal_score'] = deal_score
 
         return prod_info, prices_sorted, best_deal
-
-    def get_live_market_comparison(self, query):
-        """
-        Returns live real-time market search results from live_scraper combined with database catalog matching.
-        """
-        live_results = self.live_scraper.fetch_live_market_data(query)
-        return live_results
 
 if __name__ == "__main__":
     data_path = os.path.join(os.path.dirname(__file__), "..", "data")
     if os.path.exists(os.path.join(data_path, "products.csv")):
         comparator = PriceComparator(data_path)
-        print("Live Price Comparator Verified.")
+        res = comparator.search_products("iPhone 15")
+        print(f"Price Comparator search test for 'iPhone 15': {len(res)} matches found")
