@@ -2,7 +2,7 @@ import os
 import sys
 import numpy as np
 import pandas as pd
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, send_from_directory
 
 # Add directory to sys.path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -53,6 +53,18 @@ CATEGORY_ICONS = {
 @app.route('/')
 def home():
     return render_template('index.html')
+
+@app.route('/videos/<path:filename>')
+def serve_video(filename):
+    video_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "static", "videos")
+    return send_from_directory(video_dir, filename, mimetype='video/mp4', conditional=True)
+
+@app.after_request
+def add_header(response):
+    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate, max-age=0"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "0"
+    return response
 
 @app.route('/api/stats', methods=['GET'])
 def api_stats():

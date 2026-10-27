@@ -792,6 +792,9 @@
                 </div>
             </div>
             <div class="header-actions">
+                <button class="btn-watchlist-toggle" onclick="document.getElementById('hero-showcase').scrollIntoView({behavior:'smooth'}); startVideoWithSound();" style="background:rgba(99,102,241,0.2); border-color:var(--primary); color:#fff;">
+                    <i class="fa-solid fa-play" style="color:#34d399;"></i> 3D Video
+                </button>
                 <button class="btn-watchlist-toggle" onclick="toggleWatchlist()">
                     <i class="fa-solid fa-heart" style="color:#f43f5e;"></i> Watchlist (<span id="watchlist-count">0</span>)
                 </button>
@@ -833,8 +836,20 @@
 
             <!-- 3D Interactive Video Card with Parallax Tilt -->
             <div class="video-3d-wrapper">
-                <div class="video-card-3d" id="video-card">
-                    <video id="hero-vid" class="hero-video" autoplay loop muted playsinline preload="auto">
+                <div class="video-card-3d" id="video-card" style="position:relative;">
+                    <!-- Big Center Play Button Overlay if Paused -->
+                    <div id="video-play-overlay" onclick="startVideoWithSound()" style="position:absolute; inset:0; z-index:10; background:rgba(0,0,0,0.45); display:flex; flex-direction:column; align-items:center; justify-content:center; cursor:pointer; border-radius:20px; transition:opacity 0.3s;">
+                        <div style="width:72px; height:72px; background:linear-gradient(135deg, #6366f1, #10b981); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.9rem; color:#fff; box-shadow:0 0 35px rgba(99,102,241,0.7); margin-bottom:12px;">
+                            <i class="fa-solid fa-play" style="margin-left:4px;"></i>
+                        </div>
+                        <span style="font-size:0.92rem; font-weight:800; color:#fff; letter-spacing:0.5px; text-shadow:0 2px 10px rgba(0,0,0,0.8);">
+                            ▶ CLICK TO PLAY 3D VIDEO
+                        </span>
+                        <span style="font-size:0.75rem; color:#a7f3d0; margin-top:4px;">(With Audio & Voiceover)</span>
+                    </div>
+
+                    <video id="hero-vid" class="hero-video" autoplay loop muted playsinline controls preload="auto" style="min-height:280px; width:100%; aspect-ratio:16/9; background:#020409;">
+                        <source src="/videos/smartshop_ai_intro.mp4" type="video/mp4">
                         <source src="/static/videos/smartshop_ai_intro.mp4" type="video/mp4">
                         Your browser does not support HTML5 video.
                     </video>
@@ -851,10 +866,16 @@
                                 <i class="fa-solid fa-rotate-left"></i>
                             </button>
                         </div>
-                        <span style="font-size:0.75rem; color:#a5b4fc; font-weight:700;">
-                            <i class="fa-solid fa-film"></i> 3D Cinematic Render
-                        </span>
+                        <div style="display:flex; align-items:center; gap:12px;">
+                            <a href="/videos/smartshop_ai_intro.mp4" target="_blank" class="video-ctrl-btn" style="color:#a5b4fc; text-decoration:none;">
+                                <i class="fa-solid fa-arrow-up-right-from-square"></i> Fullscreen
+                            </a>
+                        </div>
                     </div>
+                </div>
+
+                <div style="margin-top:8px; font-size:0.78rem; color:var(--text-muted); text-align:center;">
+                    Direct video link: <a href="/videos/smartshop_ai_intro.mp4" target="_blank" style="color:#818cf8; font-weight:600; text-decoration:underline;">Open MP4 directly</a>
                 </div>
 
                 <!-- Interactive Chapter Jump Pills -->
@@ -1262,6 +1283,34 @@
         const soundIcon = document.getElementById('sound-icon');
         const soundText = document.getElementById('sound-text');
         const playIcon = document.getElementById('play-icon');
+        const playOverlay = document.getElementById('video-play-overlay');
+
+        function startVideoWithSound() {
+            if (!vid) return;
+            vid.muted = false;
+            if (soundIcon) soundIcon.className = 'fa-solid fa-volume-high';
+            if (soundText) soundText.innerText = 'Mute';
+            vid.play().then(() => {
+                if (playOverlay) playOverlay.style.display = 'none';
+                if (playIcon) playIcon.className = 'fa-solid fa-pause';
+            }).catch(() => {
+                vid.muted = true;
+                vid.play();
+                if (playOverlay) playOverlay.style.display = 'none';
+                if (playIcon) playIcon.className = 'fa-solid fa-pause';
+            });
+        }
+
+        if (vid) {
+            vid.addEventListener('play', () => {
+                if (playOverlay) playOverlay.style.display = 'none';
+                if (playIcon) playIcon.className = 'fa-solid fa-pause';
+            });
+            vid.addEventListener('pause', () => {
+                if (playOverlay) playOverlay.style.display = 'flex';
+                if (playIcon) playIcon.className = 'fa-solid fa-play';
+            });
+        }
 
         function toggleVideoSound() {
             if (!vid) return;
