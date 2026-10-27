@@ -16,7 +16,8 @@ from src.visual_search import VisualSearchEngine
 from src.ai_agent import AgenticShoppingAssistant
 from src.google_search import GoogleShoppingSearch
 
-app = Flask(__name__, template_folder='templates')
+app = Flask(__name__, template_folder='templates', static_folder='static')
+app.config['TEMPLATES_AUTO_RELOAD'] = True
 
 DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
 
